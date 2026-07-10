@@ -5,9 +5,12 @@ EL-A3 Robot Arm SRDF (Semantic Robot Description Format)
 -->
 <robot name="EL-A3">
     <!-- Planning Groups -->
-    <!-- Arm group: 6-DOF (L1-L6), chain ends at end_effector (fixed to l5_l6_urdf_asm) -->
+    <!--
+      Arm group: configure KDL's group tip as the last link reached by an
+      active joint. end_effector remains the fixed public TCP frame.
+    -->
     <group name="arm">
-        <chain base_link="base_link" tip_link="end_effector"/>
+        <chain base_link="base_link" tip_link="l5_l6_urdf_asm"/>
     </group>
 
     <!-- Gripper group: 1-DOF (L7), separate kinematic branch from l5_l6_urdf_asm -->
@@ -52,7 +55,7 @@ EL-A3 Robot Arm SRDF (Semantic Robot Description Format)
     </group_state>
 
     <!-- End Effector -->
-    <end_effector name="ee" parent_link="end_effector" group="gripper" parent_group="arm"/>
+    <end_effector name="ee" parent_link="l5_l6_urdf_asm" group="gripper" parent_group="arm"/>
 
     <!-- Virtual Joint to World -->
     <virtual_joint name="world_joint" type="fixed" parent_frame="world" child_link="base_link"/>
@@ -103,4 +106,3 @@ EL-A3 Robot Arm SRDF (Semantic Robot Description Format)
     -->
 
 </robot>
-
