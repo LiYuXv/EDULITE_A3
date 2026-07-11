@@ -68,8 +68,8 @@ EL-A3 Robot Arm SRDF (Semantic Robot Description Format)
     <disable_collisions link1="l4_l5_urdf_asm" link2="part_9" reason="Adjacent"/>
     <disable_collisions link1="part_9" link2="l5_l6_urdf_asm" reason="Adjacent"/>
     <disable_collisions link1="l5_l6_urdf_asm" link2="end_effector" reason="Adjacent"/>
-    <disable_collisions link1="l5_l6_urdf_asm" link2="gripper_link" reason="Adjacent"/>
-    <disable_collisions link1="gripper_link" link2="end_effector" reason="Never"/>
+    <disable_collisions link1="l5_l6_urdf_asm" link2="gripper_driver_link" reason="Adjacent"/>
+    <disable_collisions link1="gripper_driver_link" link2="end_effector" reason="Never"/>
 
     <!-- Additional collision pairs that never collide -->
     <disable_collisions link1="l1_urdf_urdf_asm" link2="l2_l3_urdf_asm" reason="Never"/>
@@ -92,12 +92,12 @@ EL-A3 Robot Arm SRDF (Semantic Robot Description Format)
     <disable_collisions link1="l1_link_urdf_asm" link2="l4_l5_urdf_asm" reason="Never"/>
     <disable_collisions link1="l3_lnik_urdf_asm" link2="l5_l6_urdf_asm" reason="Never"/>
     <disable_collisions link1="l4_l5_urdf_asm" link2="end_effector" reason="Never"/>
-    <disable_collisions link1="l4_l5_urdf_asm" link2="gripper_link" reason="Never"/>
-    <disable_collisions link1="part_9" link2="gripper_link" reason="Never"/>
+    <disable_collisions link1="l4_l5_urdf_asm" link2="gripper_driver_link" reason="Never"/>
+    <disable_collisions link1="part_9" link2="gripper_driver_link" reason="Never"/>
     <disable_collisions link1="l2_l3_urdf_asm" link2="end_effector" reason="Never"/>
-    <disable_collisions link1="l2_l3_urdf_asm" link2="gripper_link" reason="Never"/>
+    <disable_collisions link1="l2_l3_urdf_asm" link2="gripper_driver_link" reason="Never"/>
     <disable_collisions link1="l3_lnik_urdf_asm" link2="end_effector" reason="Never"/>
-    <disable_collisions link1="l3_lnik_urdf_asm" link2="gripper_link" reason="Never"/>
+    <disable_collisions link1="l3_lnik_urdf_asm" link2="gripper_driver_link" reason="Never"/>
 
     <!--
     NOTE: For a complete collision matrix, run MoveIt Setup Assistant:
