@@ -261,7 +261,8 @@
     driver link above rotates with L7.
   -->
   <joint name="gripper_base_joint" type="fixed">
-    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <!-- Match the wrist flange plane used by the original jaw mesh. -->
+    <origin rpy="0 0 0" xyz="0 0 0.045"/>
     <parent link="l5_l6_urdf_asm"/>
     <child link="gripper_base_link"/>
   </joint>
