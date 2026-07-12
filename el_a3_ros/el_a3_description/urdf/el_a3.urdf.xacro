@@ -8,7 +8,6 @@
   <xacro:arg name="can_interface" default="can0"/>
   <xacro:arg name="host_can_id" default="253"/>
   <xacro:arg name="wrist_motor_type" default="EL05"/>
-  <xacro:arg name="use_gazebo" default="false"/>
 
   <!-- Wrist motor parameters (EL05: 6Nm, RS05: 5.5Nm) -->
   <xacro:property name="wrist_motor_type" value="$(arg wrist_motor_type)"/>
@@ -277,37 +276,18 @@
     <origin xyz="0 0 -0.074" rpy="0 0 0"/>
     <parent link="l5_l6_urdf_asm"/>
     <child link="gripper_driver_link"/>
-    <!-- Gazebo's imported wrist frame is mirrored relative to the CAD frame. -->
-    <xacro:if value="$(arg use_gazebo)">
-      <axis xyz="0 0 -1"/>
-    </xacro:if>
-    <xacro:unless value="$(arg use_gazebo)">
-      <axis xyz="0 0 1"/>
-    </xacro:unless>
+    <axis xyz="0 0 1"/>
     <!-- 0 rad = closed, 1.5708 rad = open. -->
     <limit effort="${wrist_effort}" velocity="50" lower="0" upper="1.5708"/>
-    <xacro:if value="$(arg use_gazebo)">
-      <dynamics damping="0" friction="0"/>
-    </xacro:if>
-    <xacro:unless value="$(arg use_gazebo)">
-      <dynamics damping="0.05" friction="0.05"/>
-    </xacro:unless>
+    <dynamics damping="0.05" friction="0.05"/>
   </joint>
 
   <link name="gripper_driver_link">
     <inertial>
       <mass value="0.020"/>
-      <!-- Offset from the fixed gripper base so Gazebo has no self-contact. -->
       <origin xyz="0.040 0 -0.030"/>
       <inertia ixx="2e-6" ixy="0" ixz="0" iyy="3.4e-5" iyz="0" izz="3.4e-5"/>
     </inertial>
-    <!-- Collision-only body keeps the invisible L7 branch physical in Gazebo. -->
-    <collision>
-      <origin xyz="0.040 0 -0.030" rpy="0 0 0"/>
-      <geometry>
-        <box size="0.008 0.008 0.016"/>
-      </geometry>
-    </collision>
   </link>
 
   <!--
@@ -338,44 +318,20 @@
     <collision>
       <origin xyz="-0.1340 0 -0.1417" rpy="0 0 0"/>
       <geometry>
-        <!-- Keep Gazebo's simplified base collision clear of both sliding rails. -->
-        <xacro:if value="$(arg use_gazebo)">
-          <box size="0.050 0.040 0.069"/>
-        </xacro:if>
-        <xacro:unless value="$(arg use_gazebo)">
-          <box size="0.050 0.191 0.069"/>
-        </xacro:unless>
+        <box size="0.050 0.191 0.069"/>
       </geometry>
     </collision>
   </link>
 
   <joint name="left_jaw_joint" type="prismatic">
-    <xacro:if value="$(arg use_gazebo)">
-      <origin xyz="0 -0.05 0" rpy="0 0 0"/>
-    </xacro:if>
-    <xacro:unless value="$(arg use_gazebo)">
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-    </xacro:unless>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
     <parent link="gripper_base_link"/>
     <child link="left_jaw_link"/>
-    <!-- Positive motion is toward the gripper centre in the canonical URDF. -->
-    <xacro:if value="$(arg use_gazebo)">
-      <axis xyz="0 1 0"/>
-    </xacro:if>
-    <xacro:unless value="$(arg use_gazebo)">
-      <axis xyz="0 -1 0"/>
-    </xacro:unless>
-    <xacro:if value="$(arg use_gazebo)">
-      <limit effort="40" velocity="0.20" lower="0" upper="0.05"/>
-    </xacro:if>
-    <xacro:unless value="$(arg use_gazebo)">
-      <limit effort="40" velocity="0.20" lower="0" upper="0.05"/>
-    </xacro:unless>
+    <!-- Positive motion is toward the gripper centre. -->
+    <axis xyz="0 -1 0"/>
+    <limit effort="40" velocity="0.20" lower="0" upper="0.05"/>
     <dynamics damping="5.0" friction="1.0"/>
-    <!-- Gazebo uses the ros2_control native mimic path (which has no offset). -->
-    <xacro:unless value="$(arg use_gazebo)">
-      <mimic joint="L7_joint" multiplier="-0.031831" offset="0.05"/>
-    </xacro:unless>
+    <mimic joint="L7_joint" multiplier="-0.031831" offset="0.05"/>
   </joint>
 
   <link name="left_jaw_link">
@@ -391,38 +347,23 @@
       </geometry>
       <material name="orange"/>
     </visual>
-    <xacro:unless value="$(arg use_gazebo)">
-      <collision>
-        <origin xyz="-0.1342 0.0677 -0.2111" rpy="0 0 0"/>
-        <geometry>
-          <box size="0.042 0.036 0.087"/>
-        </geometry>
-      </collision>
-    </xacro:unless>
+    <collision>
+      <origin xyz="-0.1342 0.0677 -0.2111" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.042 0.036 0.087"/>
+      </geometry>
+    </collision>
   </link>
 
   <joint name="right_jaw_joint" type="prismatic">
-    <xacro:if value="$(arg use_gazebo)">
-      <origin xyz="0 0.05 0" rpy="0 0 0"/>
-    </xacro:if>
-    <xacro:unless value="$(arg use_gazebo)">
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-    </xacro:unless>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
     <parent link="gripper_base_link"/>
     <child link="right_jaw_link"/>
     <!-- Positive motion is toward the gripper centre. -->
     <axis xyz="0 1 0"/>
-    <xacro:if value="$(arg use_gazebo)">
-      <limit effort="40" velocity="0.20" lower="-0.05" upper="0"/>
-    </xacro:if>
-    <xacro:unless value="$(arg use_gazebo)">
-      <limit effort="40" velocity="0.20" lower="0" upper="0.05"/>
-    </xacro:unless>
+    <limit effort="40" velocity="0.20" lower="0" upper="0.05"/>
     <dynamics damping="5.0" friction="1.0"/>
-    <!-- Gazebo uses the ros2_control native mimic path (which has no offset). -->
-    <xacro:unless value="$(arg use_gazebo)">
-      <mimic joint="L7_joint" multiplier="-0.031831" offset="0.05"/>
-    </xacro:unless>
+    <mimic joint="L7_joint" multiplier="-0.031831" offset="0.05"/>
   </joint>
 
   <link name="right_jaw_link">
@@ -438,32 +379,19 @@
       </geometry>
       <material name="orange"/>
     </visual>
-    <xacro:unless value="$(arg use_gazebo)">
-      <collision>
-        <origin xyz="-0.1342 -0.0677 -0.2111" rpy="0 0 0"/>
-        <geometry>
-          <box size="0.042 0.036 0.087"/>
-        </geometry>
-      </collision>
-    </xacro:unless>
+    <collision>
+      <origin xyz="-0.1342 -0.0677 -0.2111" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.042 0.036 0.087"/>
+      </geometry>
+    </collision>
   </link>
-
-  <!-- Gazebo Sim uses the same L7 command interface and native mimic constraints. -->
-  <xacro:if value="$(arg use_gazebo)">
-    <gazebo>
-      <!-- Humble/Fortress exports the compatibility alias below from gz_ros2_control. -->
-      <plugin filename="gz_ros2_control-system" name="ign_ros2_control::IgnitionROS2ControlPlugin">
-        <parameters>$(find el_a3_description)/config/el_a3_controllers.yaml</parameters>
-      </plugin>
-    </gazebo>
-  </xacro:if>
 
   <!-- ros2_control interface -->
   <xacro:el_a3_ros2_control 
     use_mock_hardware="$(arg use_mock_hardware)"
     can_interface="$(arg can_interface)"
     host_can_id="$(arg host_can_id)"
-    wrist_motor_type="$(arg wrist_motor_type)"
-    use_gazebo="$(arg use_gazebo)"/>
+    wrist_motor_type="$(arg wrist_motor_type)"/>
 
 </robot>
