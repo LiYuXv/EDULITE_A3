@@ -291,10 +291,11 @@
   </link>
 
   <!--
-    Simplified parallel gripper.  The supplied CAD meshes have X as the
-    approach axis, so a -90 degree Y rotation aligns them with the original
-    wrist/end-effector direction.  The base is on a fixed L6 branch; only the
-    lightweight driver link above rotates with L7.
+    Simplified parallel gripper. The supplied CAD meshes share a global CAD
+    frame: X is the approach axis and Y is the jaw span. Rotate that frame into
+    the wrist frame and compensate its CAD origin so the jaws span horizontally
+    across the end effector. The base is fixed to L6; only the lightweight
+    driver link above rotates with L7.
   -->
   <joint name="gripper_base_joint" type="fixed">
     <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -304,12 +305,12 @@
 
   <link name="gripper_base_link">
     <inertial>
-      <origin xyz="-0.1340 0 -0.1417" rpy="0 0 0"/>
+      <origin xyz="0 0 -0.1636" rpy="0 0 0"/>
       <mass value="0.180"/>
-      <inertia ixx="0.00070" ixy="0" ixz="0" iyy="0.00025" iyz="0" izz="0.00075"/>
+      <inertia ixx="0.00025" ixy="0" ixz="0" iyy="0.00070" iyz="0" izz="0.00075"/>
     </inertial>
     <visual>
-      <origin xyz="0 0 0" rpy="0 -1.5708 0"/>
+      <origin xyz="0 -0.1340 0" rpy="0 -1.5708 -1.5708"/>
       <geometry>
         <mesh filename="package://el_a3_description/meshes/gripper/visual/gripper_base.stl"/>
       </geometry>
@@ -317,9 +318,9 @@
     </visual>
     <collision>
       <!-- Central mounting block only: keep both jaw slide paths collision-free. -->
-      <origin xyz="-0.1340 0 -0.1560" rpy="0 0 0"/>
+      <origin xyz="0 0 -0.1560" rpy="0 0 0"/>
       <geometry>
-        <box size="0.050 0.040 0.012"/>
+        <box size="0.040 0.050 0.012"/>
       </geometry>
     </collision>
   </link>
@@ -329,7 +330,7 @@
     <parent link="gripper_base_link"/>
     <child link="left_jaw_link"/>
     <!-- Positive motion is toward the gripper centre. -->
-    <axis xyz="0 -1 0"/>
+    <axis xyz="-1 0 0"/>
     <limit effort="40" velocity="0.20" lower="0" upper="0.05"/>
     <dynamics damping="5.0" friction="1.0"/>
     <mimic joint="L7_joint" multiplier="-0.031831" offset="0.05"/>
@@ -337,21 +338,21 @@
 
   <link name="left_jaw_link">
     <inertial>
-      <origin xyz="-0.1342 0.0677 -0.2111" rpy="0 0 0"/>
+      <origin xyz="0.0677 0.0003 -0.2111" rpy="0 0 0"/>
       <mass value="0.035"/>
       <inertia ixx="0.000030" ixy="0" ixz="0" iyy="0.000030" iyz="0" izz="0.000020"/>
     </inertial>
     <visual>
-      <origin xyz="0 0 0" rpy="0 -1.5708 0"/>
+      <origin xyz="0 -0.1340 0" rpy="0 -1.5708 -1.5708"/>
       <geometry>
         <mesh filename="package://el_a3_description/meshes/gripper/visual/left_jaw_carriage.stl"/>
       </geometry>
       <material name="orange"/>
     </visual>
     <collision>
-      <origin xyz="-0.1342 0.0677 -0.2111" rpy="0 0 0"/>
+      <origin xyz="0.0677 0.0003 -0.2111" rpy="0 0 0"/>
       <geometry>
-        <box size="0.042 0.032 0.087"/>
+        <box size="0.032 0.042 0.087"/>
       </geometry>
     </collision>
   </link>
@@ -361,7 +362,7 @@
     <parent link="gripper_base_link"/>
     <child link="right_jaw_link"/>
     <!-- Positive motion is toward the gripper centre. -->
-    <axis xyz="0 1 0"/>
+    <axis xyz="1 0 0"/>
     <limit effort="40" velocity="0.20" lower="0" upper="0.05"/>
     <dynamics damping="5.0" friction="1.0"/>
     <mimic joint="L7_joint" multiplier="-0.031831" offset="0.05"/>
@@ -369,21 +370,21 @@
 
   <link name="right_jaw_link">
     <inertial>
-      <origin xyz="-0.1342 -0.0677 -0.2111" rpy="0 0 0"/>
+      <origin xyz="-0.0677 0.0003 -0.2111" rpy="0 0 0"/>
       <mass value="0.035"/>
       <inertia ixx="0.000030" ixy="0" ixz="0" iyy="0.000030" iyz="0" izz="0.000020"/>
     </inertial>
     <visual>
-      <origin xyz="0 0 0" rpy="0 -1.5708 0"/>
+      <origin xyz="0 -0.1340 0" rpy="0 -1.5708 -1.5708"/>
       <geometry>
         <mesh filename="package://el_a3_description/meshes/gripper/visual/right_jaw_carriage.stl"/>
       </geometry>
       <material name="orange"/>
     </visual>
     <collision>
-      <origin xyz="-0.1342 -0.0677 -0.2111" rpy="0 0 0"/>
+      <origin xyz="-0.0677 0.0003 -0.2111" rpy="0 0 0"/>
       <geometry>
-        <box size="0.042 0.032 0.087"/>
+        <box size="0.032 0.042 0.087"/>
       </geometry>
     </collision>
   </link>
